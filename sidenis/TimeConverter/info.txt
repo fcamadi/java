@@ -1,1 +1,5 @@
 
+
+Exercise in Java for a swiss company located in Saint Petersburg (Sidenis).
+
+I got an offer from them, but ...
