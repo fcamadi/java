@@ -1,0 +1,58 @@
+seq: invoiceNotApproved >> sourceId: [invoice_approved] - targetId: [reviewInvoice]
+--------------------------------------------------
+seq: sequenceFlow_180 >> sourceId: [approveInvoice] - targetId: [invoice_approved]
+--------------------------------------------------
+seq: sequenceFlow_183 >> sourceId: [reviewInvoice] - targetId: [reviewSuccessful_gw]
+--------------------------------------------------
+seq: invoiceApproved >> sourceId: [invoice_approved] - targetId: [prepareBankTransfer]
+--------------------------------------------------
+seq: reviewNotSuccessful >> sourceId: [reviewSuccessful_gw] - targetId: [invoiceNotProcessed]
+--------------------------------------------------
+seq: reviewSuccessful >> sourceId: [reviewSuccessful_gw] - targetId: [approveInvoice]
+--------------------------------------------------
+seq: sequenceFlow_178 >> sourceId: [assignApprover] - targetId: [approveInvoice]
+--------------------------------------------------
+seq: SequenceFlow_2 >> sourceId: [prepareBankTransfer] - targetId: [ServiceTask_1]
+--------------------------------------------------
+seq: SequenceFlow_1 >> sourceId: [StartEvent_1] - targetId: [assignApprover]
+--------------------------------------------------
+seq: SequenceFlow_3 >> sourceId: [ServiceTask_1] - targetId: [invoiceProcessed]
+--------------------------------------------------
+
+
+
+mapSeqFlowsStartNodes:  
+
+ "sequenceFlow_178" -> "assignApprover"
+ "reviewNotSuccessful" -> "reviewSuccessful_gw"
+ "invoiceNotApproved" -> "invoice_approved"
+ "reviewSuccessful" -> "reviewSuccessful_gw"
+ "sequenceFlow_183" -> "reviewInvoice"
+ "SequenceFlow_2" -> "prepareBankTransfer"
+ "SequenceFlow_3" -> "ServiceTask_1"
+ "sequenceFlow_180" -> "approveInvoice"
+ "invoiceApproved" -> "invoice_approved"
+ "SequenceFlow_1" -> "StartEvent_1"
+
+
+mapSeqFlowsTargetNodes:
+
+ "sequenceFlow_178" -> "approveInvoice"
+ "reviewNotSuccessful" -> "invoiceNotProcessed"
+ "invoiceNotApproved" -> "reviewInvoice"
+ "reviewSuccessful" -> "approveInvoice"
+ "sequenceFlow_183" -> "reviewSuccessful_gw"
+ "SequenceFlow_2" -> "ServiceTask_1"
+ "SequenceFlow_3" -> "invoiceProcessed"
+ "sequenceFlow_180" -> "invoice_approved"
+ "invoiceApproved" -> "prepareBankTransfer"
+ "SequenceFlow_1" -> "assignApprover"
+
+
+
+
+
+
+
+
+

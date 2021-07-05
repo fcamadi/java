@@ -1,0 +1,62 @@
+mapSeqFlowStartNodes
+mapSeqFlowTargetNodes
+
+check (startNode && endNode)
+
+iter(1)
+
+List<SequenceFlow> <- getSequenceFlowsOfStartNode(startNodeId)
+  L1=sequenceFlow_180  <- approveInvoice
+
+List<FlowNode> <- getTargetNodes(sequenceFlows in L1)
+   l1=invoice_approved  <-  sequenceFlow_180
+
+nodeList=[approveInvoice,invoice_approved]
+
+iter(2)
+
+List<SequenceFlow> <- getSequenceFlowsOfStartNode(startNodeId)
+  L2=invoiceNotApproved,invoiceApproved  <- invoice_approved
+
+List<FlowNode> <- getTargetNodes(sequenceFlows in L2)
+  l2a=reviewInvoice  <-  invoiceNotApproved
+  l2b=prepareBankTransfer  <-  invoiceApproved
+
+nodeList=[[approveInvoice,invoice_approved,reviewInvoice],[approveInvoice,invoice_approved,prepareBankTransfer]]
+
+iter(3)
+
+List<SequenceFlow> <- getSequenceFlowsOfStartNode(startNodeId)
+  L3a=sequenceFlow_183  <-  reviewInvoice
+  L3b=SequenceFlow_2  <-  prepareBankTransfer
+
+List<FlowNode> <- getTargetNodes(sequenceFlows in L3a)
+  l3a=reviewSuccessful_gw  <-  sequenceFlow_183
+
+List<FlowNode> <- getTargetNodes(sequenceFlows in L3b)
+  l3b=ServiceTask_1 <- SequenceFlow_2
+
+
+iter(4)
+
+List<SequenceFlow> <- getSequenceFlowsOfStartNode(startNodeId)
+  L4a=reviewNotSuccessful  <- reviewSuccessful_gw
+  L4b=SequenceFlow_3  <-  ServiceTask_1
+  
+List<FlowNode> <- getTargetNodes(sequenceFlows in L4a)
+  l4a=invoiceNotProcessed  <- reviewNotSuccessful    
+
+List<FlowNode> <- getTargetNodes(sequenceFlows in L4b) 
+  l4b=invoiceProcessed <-  SequenceFlow_3            CHECK if endNode OR lastNode
+                                                      (invoicedProcessed==endNode => FOUND path !!!)
+
+iter(5)
+
+List<SequenceFlow> <- getSequenceFlowsOfStartNode(startNodeId)
+  L5a= null  <- invoiceNotProcessed                  CHECK if endNode OR lastNode
+                                                     (lastNode <==> no key in mapSeqFlowsStartNodes) 
+
+
+
+
+
